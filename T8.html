@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Browser</title>
+  <!-- Add links to React and ReactDOM scripts -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <!-- Optional: Add Babel standalone for JSX transformation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Add your styles -->
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-family: 'Arial', sans-serif;
+      color: #333;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    .main-image-container {
+      margin-bottom: 30px;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .main-image-container img {
+      max-width: 100%;
+      max-height: 400px;
+      border-radius: 10px;
+    }
+    
+    .image-row-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .image-row-container img {
+      margin: 5px;
+      width: 100px;
+      height: 100px;
+      border-radius: 5px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .image-row-container img:hover {
+      transform: scale(1.1);
+    }
+    
+    .selected-image {
+      margin-top: 30px;
+      border: 3px dashed #ff6f61;
+      border-radius: 15px;
+      padding: 8px;
+      transition: border-width 0.3s ease-in-out;
+    }
+  </style>
+</head>
+<body>
+<div><h1>Image Browser</h1></div>
+<div id="root"></div>
+
+<script type="text/babel">
+  function ImageRow({ setMainImage }) {
+    let urls = [];
+    for (let i = 0; i < 10; i++) {
+      urls.push(`https://picsum.photos/200/300?random=${i * 5 + i}`);
+    }
+
+    const handleImageHover = (url) => {
+      setMainImage(url);
+    };
+
+    const gallery = urls.map((url, index) => (
+      React.createElement('img', {
+        key: index,
+        src: url,
+        alt: '',
+        onMouseEnter: () => handleImageHover(url)
+      })
+    ));
+
+    return React.createElement('div', { className: 'image-row-container' }, gallery);
+  }
+
+  function App() {
+    const [mainImage, setMainImage] = React.useState('');
+
+    return React.createElement('div', { className: 'app-container' },
+      React.createElement(ImageRow, { setMainImage: setMainImage }),
+      React.createElement('div', { className: 'main-image-container' },
+        mainImage && React.createElement('img', { className: 'selected-image', alt: '', src: mainImage })
+      )
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    React.createElement(React.StrictMode, null,
+      React.createElement(App)
+    )
+  );
+</script>
+
+</body>
+</html>
